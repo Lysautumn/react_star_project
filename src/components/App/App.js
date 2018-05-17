@@ -6,27 +6,35 @@ class App extends Component {
 
     this.state = {
       starList: [
-        {name:'hadar', diameter: 50},
-        {name:'gacrux', diameter: 2000},
-        {name:'kochab', diameter: 555}
+        { name:'hadar', diameter: 50 },
+        { name:'gacrux', diameter: 2000 },
+        { name:'kochab', diameter: 555 }
       ],
       newStar: {
         name: '',
         diameter: '',
       }
     };
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleDiameterChange = this.handleDiameterChange.bind(this);
+  }
+  handleSubmit = event => {
+    event.preventDefault();
+    console.log(this.state.newStar);
+    this.setState({
+      starList: [ ...this.state.starList, this.state.newStar ],
+      newStar: {
+        name: '',
+        diameter: '',
+      }
+    })
   }
 
-  handleNameChange(event) {
-    console.log(event.target.value);
-    
-  }
-
-  handleDiameterChange(event) {
-    console.log(event.target.value);
-    
+  handleChangeFor = propertyName => event => {
+    this.setState({
+      newStar: {
+        ...this.state.newStar,
+        [propertyName]: event.target.value,
+      }
+    })
   }
   render() {
     // let starListItemArray = [];
@@ -39,12 +47,17 @@ class App extends Component {
     return (
       <div>
         <div>
-            <input onChange={this.handleNameChange} value={this.state.newStar.name}/>
-            <input onChange={this.handleDiameterChange} value={this.state.newStar.diameter}/>
+          Our new star is: { this.state.newStar.name } with a diameter of { this.state.newStar.diameter }
         </div>
-        {this.state.newStar.name} and {this.state.newStar.diameter}
+        <div>
+          <form onSubmit={ this.handleSubmit }>
+            <input onChange={ this.handleChangeFor('name') } value={ this.state.newStar.name }/>
+            <input onChange={ this.handleChangeFor('diameter') } value={ this.state.newStar.diameter }/>
+            <input type='submit' value='Submit Star'/>
+          </form>
+        </div>
         <ul>
-          {this.state.starList.map(star => <li key={star.name}>The star {star.name} has a diameter of {star.diameter}</li>)}
+          { this.state.starList.map(star => <li key={ star.name }>The star { star.name } has a diameter of { star.diameter }</li>) }
         </ul>
       </div>
     );
